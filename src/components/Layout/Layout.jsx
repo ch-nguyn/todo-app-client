@@ -9,11 +9,9 @@ function Layout() {
   const topBarMarkup = <TopBar userMenu={userMenuMarkup} />;
 
   return (
-    <div>
-      <Frame topBar={topBarMarkup}>
-        <Outlet />
-      </Frame>
-    </div>
+    <Frame topBar={topBarMarkup}>
+      <Outlet />
+    </Frame>
   );
 }
 

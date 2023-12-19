@@ -61,7 +61,7 @@ function TodoList() {
       await todoApi.createTodo(todo);
       const data = [...todos, todo];
       setTodos(data);
-      setTimeout(() => fetchData(), 300);
+      setTimeout(() => fetchData(), 500);
     } catch (e) {
       console.log(e);
     }
