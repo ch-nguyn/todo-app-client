@@ -6,23 +6,55 @@ import {
   Badge,
   Card,
   ResourceList,
+  TextField,
+  Form,
 } from "@shopify/polaris";
 import { useState } from "react";
 import { todoApi } from "../../helpers/api/todoApi";
 import useGetData from "../../hooks/useGetData";
-import TodoModal from "../TodoModal/TodoModal";
 import EmptyStateComponent from "../EmtyState/EmptyState";
 import useModal from "../../hooks/useModal";
 
 function TodoList() {
   const [selectedItems, setSelectedItems] = useState([]);
+  const [todoInput, setTodoInput] = useState("");
+  const [err, setErr] = useState(false);
   const {
     data: todos,
     setData: setTodos,
     loading,
     fetchData,
   } = useGetData("http://localhost:5000/api/todos");
-  const { isActive, closeModal, openModal } = useModal();
+
+  const cancelAction = () => {
+    setTodoInput((prev) => (prev = ""));
+    setErr(false);
+  };
+
+  const confirmAction = () => {
+    if (!todoInput) {
+      setErr(true);
+      return false;
+    }
+    setErr(false);
+    setTodoInput((prev) => (prev = ""));
+    addTodo({ text: todoInput });
+    return true;
+  };
+
+  const { openModal, modal } = useModal({
+    content: (
+      <TextField
+        error={err && "You must enter a todo"}
+        placeholder="Enter your todo"
+        value={todoInput}
+        onChange={setTodoInput}
+        autoComplete="off"
+      />
+    ),
+    cancelAction,
+    confirmAction,
+  });
 
   const addTodo = async (todo) => {
     try {
@@ -90,7 +122,7 @@ function TodoList() {
         </Button>
       }
     >
-      <TodoModal active={isActive} closeModal={closeModal} addTodo={addTodo} />
+      {modal}
       <Stack vertical>
         <Stack
           alignment="center"
